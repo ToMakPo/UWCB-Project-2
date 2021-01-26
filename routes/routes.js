@@ -5,22 +5,20 @@ function isAuthenticated(req, res, next) {
     if (req.user) {
         return next();
     }
-      res.sendFile(path.join(__dirname, "../public/login.html"));
+    res.sendFile(path.join(__dirname, "../public/login.html"));
 };
 
 module.exports = function (app) {
-    // app.get("/", isAuthenticated, function (req, res) {
-    //     res.sendFile(path.join(__dirname, "../public/profile.html"));
-    // });
-
-    app.get("/login", function (req, res) {
-
+    app.get("/", function (req, res) {
         res.sendFile(path.join(__dirname, "../public/login.html"));
     });
 
-    app.get("/", function (req, res) {
-
+    app.get("/signup", function (req, res) {
         res.sendFile(path.join(__dirname, "../public/signup.html"));
+    });
+
+    app.get("/login", function (req, res) {
+        res.sendFile(path.join(__dirname, "../public/login.html"));
     });
 
     app.get("/profile",isAuthenticated,function (req, res) {

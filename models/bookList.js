@@ -12,9 +12,7 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.INTEGER,
             default: null
         }
-
     });
-
 
     // bookList.associate = function (models) {
     //     bookList.belongsTo(models.user_profile, {
@@ -25,6 +23,5 @@ module.exports = function (sequelize, DataTypes) {
     //     });
     // };
 
-    
     return bookList;
 };

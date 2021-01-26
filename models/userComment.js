@@ -28,7 +28,7 @@ module.exports = function (sequelize, DataTypes) {
     //             allowNull: false
     //         }
     //     });
-        
+
     //     //self join
     //     userComment.hasMany(models.user_comment, {
     //         onDelete: "restrict"
@@ -42,7 +42,5 @@ module.exports = function (sequelize, DataTypes) {
     //     });
     // };
 
-
-    
     return userComment;
 };
