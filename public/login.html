@@ -4,22 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="./css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
-    <title>Book-Club-Main-Page</title>
+    <title>Book Club</title>
 </head>
-<body style="text-align: center;">
-    <div class="jumbotron text-center">
+<body>
+    <header class="jumbotron text-center bg-secondary">
         <h1>Book Club!</h1>
         <p>Find and organize your favorite books!</p>
-    </div>
-    <div>
-        <label for="email">E-mail:</label>
-        <input type="email" id="email" name="Username"><br><br>
-        <label for="Password">Password:</label>
-        <input type="password" id="password" name="Password"><br><br>
-        <input type="submit" id="login" value="Submit">
-        <a href="/"><input type="submit"  value="Sign-up"></a>
-    </div>
+    </header>
+    <main>
+        <form action="/login" method="post"></form>
+            <h2>Login to your account</h2>
+            <table>
+                <tr>
+                    <td><label for="email">E-mail:</label></td>
+                    <td><input type="email" id="email-input" name="email"></td>
+                </tr>
+                <tr>
+                    <td><label for="password">Password:</label></td>
+                    <td><input type="password" id="password-input" name="password"></td>
+                </tr>
+                <tr><td colspan="2">
+                    <input type="submit" id="login-button" value="Login">
+                </td></tr>
+            </table>
+        </form>
+
+        <div>Don't have an account yet? <a href="/signup">Sign-up here!</a></div>
+    </main>
 </body>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
