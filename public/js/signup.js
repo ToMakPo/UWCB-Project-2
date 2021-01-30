@@ -1,5 +1,3 @@
-
-
 $(document).ready(() => {
   // Getting references to our form and input
   const signupForm = $("#sign-up-form");
@@ -36,14 +34,15 @@ $(document).ready(() => {
     lnameInput.val("");
   });
 
-
   // Does a post to the signup route. If successful, we are redirected to the members page
   // Otherwise we log any errors
   function signUpUser(email, password, firstName, lastName) {
     $.post("/api/signup", {
       email: email,
       password: password,
+      // eslint-disable-next-line camelcase
       first_name: firstName,
+      // eslint-disable-next-line camelcase
       last_name: lastName
     })
       .then(() => {

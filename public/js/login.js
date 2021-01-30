@@ -1,4 +1,3 @@
-
 $(document).ready(() => {
   // Getting references to our form and inputs
   const emailInput = $("#email-input");

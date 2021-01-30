@@ -1,33 +1,36 @@
-
 $.get("/api/user_data").then(data => {
-  const text = "id " + data.id + " " + " email : " + data.email + " name :" + data.first_name;
+  const text =
+    "id " +
+    data.id +
+    " " +
+    " email : " +
+    data.email +
+    " name :" +
+    data.first_name;
   $("#welcome").text(text);
 
-  userBooks(data.id)
-
-})
+  userBooks(data.id);
+});
 
 async function userBooks(userId) {
-
   const data = await $.get(`/api/bookList/${userId}`);
-  console.log(data.length)
-
+  console.log(data.length);
 
   for (i = 0; i < data.length; i++) {
-    const googleId = data[i].google_book_id
+    const googleId = data[i].google_book_id;
 
-    let queryURL = `https://www.googleapis.com/books/v1/volumes/${googleId}`
-    const books = await $.ajax({ url: queryURL, method: "GET" })
-    console.log(books)
-    console.log(books.volumeInfo.title)
+    const queryURL = `https://www.googleapis.com/books/v1/volumes/${googleId}`;
+    const books = await $.ajax({ url: queryURL, method: "GET" });
+    console.log(books);
+    console.log(books.volumeInfo.title);
 
     const check = await $.get(`/api/check/${userId}/${googleId}`);
-    var flex = ""
-    if (check[0].completed == true) {
-      flex = "flexCheckChecked"
+    let flex = "";
+    if (check[0].completed === true) {
+      flex = "flexCheckChecked";
     }
 
-    var html = `
+    const html = `
       <div class="card w-25 p-3" style="max-height: 600px">
         <div class="flex-column">
           <div class="">
@@ -43,68 +46,56 @@ async function userBooks(userId) {
       </div>
     `;
 
-    $(".book-display").append(html)
+    $(".book-display").append(html);
   }
 }
 
+$(".book-display").on("click", ".completed", async function() {
+  const googleId = $(this).attr("data-google");
 
-var flag = true;
+  const isCompleted = $(this).attr("data-completed");
 
-$(".book-display").on("click", ".completed", async function () {
-
-  var googleId = $(this).attr("data-google")
-
-  var isCompleted = $(this).attr("data-completed")
-
-  console.log(isCompleted)
-  if (isCompleted=="false") {
+  console.log(isCompleted);
+  if (isCompleted === "false") {
     $.ajax("/api/bookList/" + googleId + "/1", {
       type: "PUT",
       data: 1
-    }).then(function () { console.log("checked") }
-    ).catch((err) => {
-      console.log(err)
-    });
+    })
+      .then(() => {
+        console.log("checked");
+      })
+      .catch(err => {
+        console.log(err);
+      });
 
-    $(this).attr("data-completed", "true")
-  
-  } 
-  if(isCompleted=="true") {
-   
+    $(this).attr("data-completed", "true");
+  }
+  if (isCompleted === "true") {
     $.ajax("/api/bookList/" + googleId + "/0", {
       type: "PUT",
       data: 0
-    }).then(function () { console.log("unChecked") }
-    ).catch((err) => {
-      console.log(err)
-    });
+    })
+      .then(() => {
+        console.log("unChecked");
+      })
+      .catch(err => {
+        console.log(err);
+      });
 
-    $(this).attr("data-completed", "false")
- 
-   
+    $(this).attr("data-completed", "false");
   }
-
 });
 
+$(".book-display").on("click", ".burn-book-delete", async function() {
+  const googleId = $(this).attr("data-googleId");
 
-$(".book-display").on("click", ".burn-book-delete", async function () {
+  const { id } = await $.get("/api/user_data");
 
-  var googleId = $(this).attr("data-googleId")
-
-  var {id}=await $.get("/api/user_data");
-
-  
-  $.ajax("/api/bookList/" + googleId+"/"+id, {
+  $.ajax("/api/bookList/" + googleId + "/" + id, {
     type: "DELETE"
-  }).then(
-    function () {
-      console.log(`deleted`);
-       location.reload();
-      //  $(this).parent().parent().remove()
-    }   
-  )
+  }).then(() => {
+    console.log("deleted");
+    location.reload();
+    //  $(this).parent().parent().remove()
+  });
 });
-
-
-
-

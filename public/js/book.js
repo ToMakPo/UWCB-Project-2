@@ -1,5 +1,3 @@
-
-
 // $.get("/api/user_data").then(data => {
 //     const text = "id " + data.id + " " + " email : " + data.email + " name :" + data.first_name;
 //     $("#welcome").text(text);
@@ -7,31 +5,28 @@
 // })
 
 function getAllBooks(title) {
-    //AIzaSyA980flXE5W-nukjTx84gphG2dT-DXaHxA
-    //&key=AIzaSyAKge42MtCOGCe7Y898T64vRpM-SpXkdfw
-    // /&key=AIzaSyA980flXE5W-nukjTx84gphG2dT-DXaHxA
-    let queryURL = `https://www.googleapis.com/books/v1/volumes?q=${title}`
-    $.ajax({
-        url: queryURL,
-        method: "GET"
-    })
-        .then(function (res) {
-            console.log(res);
+  //AIzaSyA980flXE5W-nukjTx84gphG2dT-DXaHxA
+  //&key=AIzaSyAKge42MtCOGCe7Y898T64vRpM-SpXkdfw
+  // /&key=AIzaSyA980flXE5W-nukjTx84gphG2dT-DXaHxA
+  const queryURL = `https://www.googleapis.com/books/v1/volumes?q=${title}`;
+  $.ajax({
+    url: queryURL,
+    method: "GET"
+  }).then(res => {
+    console.log(res);
 
-            const bookId = res.items[0].id;
-            $("#google").data("bookId", bookId);
+    const bookId = res.items[0].id;
+    $("#google").data("bookId", bookId);
 
-            console.log(res.items[0].volumeInfo.imageLinks.smallThumbnail)
-            console.log(res.items[0].volumeInfo.title)
-            console.log(res.items[0].volumeInfo.authors[0])
-            console.log(res.items[0].volumeInfo.description.substring(0, 100))
-            $("#book-results").empty()
-            for (i = 0; i < 20; i++) {
+    console.log(res.items[0].volumeInfo.imageLinks.smallThumbnail);
+    console.log(res.items[0].volumeInfo.title);
+    console.log(res.items[0].volumeInfo.authors[0]);
+    console.log(res.items[0].volumeInfo.description.substring(0, 100));
+    $("#book-results").empty();
+    for (i = 0; i < 20; i++) {
+      const googleId = res.items[i].id;
 
-                let googleId = res.items[i].id;
-
-                const html =
-                    `<div class="card flex-row">
+      const html = `<div class="card flex-row">
                         <img class="card-header border-0 book-image" src="https://via.placeholder.com/200" alt="Card image cap" id="img${i}">
 
                         <div class="card-body">
@@ -42,30 +37,34 @@ function getAllBooks(title) {
                             <a class="btn btn-primary" href="/api/book/${googleId}">See More Info</a>
                             <button class="btn btn-primary put-in-shelf" data-googleId=${googleId}>Add To My Bookshelf</button>
                         </div>
-                    </div>`
+                    </div>`;
 
-                $("#book-results").append(html);
-                $("#img" + i).attr("src", res.items[i].volumeInfo.imageLinks.smallThumbnail);
-                $("#title" + i).text(res.items[i].volumeInfo.title);
-                $("#author" + i).text(res.items[i].volumeInfo.authors[0]);
-                $("#description" + i).text(res.items[i].volumeInfo.description.substring(0, 280) + "...");
-                $("googleID" + i).attr("data-bookId", bookId)
+      $("#book-results").append(html);
+      $("#img" + i).attr(
+        "src",
+        res.items[i].volumeInfo.imageLinks.smallThumbnail
+      );
+      $("#title" + i).text(res.items[i].volumeInfo.title);
+      $("#author" + i).text(res.items[i].volumeInfo.authors[0]);
+      $("#description" + i).text(
+        res.items[i].volumeInfo.description.substring(0, 280) + "..."
+      );
+      $("googleID" + i).attr("data-bookId", bookId);
+    }
 
-            }
-
-            console.log(bookId);
-            // getBookById(bookId);
-
-        })
+    console.log(bookId);
+    // getBookById(bookId);
+  });
 }
 
-$("#book-search").click(function (event) {
-    event.preventDefault();
-    let bookTitle = $("#book-title").val().trim();
-    getAllBooks(bookTitle);
-    $("#book-results").removeClass("hidden");
-})
-
+$("#book-search").click(event => {
+  event.preventDefault();
+  const bookTitle = $("#book-title")
+    .val()
+    .trim();
+  getAllBooks(bookTitle);
+  $("#book-results").removeClass("hidden");
+});
 
 // function getBookById(bookId) {
 
@@ -80,60 +79,50 @@ $("#book-search").click(function (event) {
 // }
 
 function addedAlert() {
-
-    const html = 
-    `<div class="alert alert-success alert-dismissible fade show" role="alert">
+  const html = `<div class="alert alert-success alert-dismissible fade show" role="alert">
         <strong>This book was added to your bookshelf</strong>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
-    </div>`
+    </div>`;
 
-    $("#book-results").prepend(html);
-
+  $("#book-results").prepend(html);
 }
-
-
-const shelf = $(".put-in-shelf");
 
 async function putInShelf(googleId) {
-    const data = await $.get("/api/user_data");
-    const userProfileId = data.id
+  const data = await $.get("/api/user_data");
+  const userProfileId = data.id;
 
-    const check = await $.get(`/api/check/${userProfileId}/${googleId}`);
+  const check = await $.get(`/api/check/${userProfileId}/${googleId}`);
 
-    console.log(check)
-    if (!check.length) {
-
-        $.post("/api/bookList", {
-            google_book_id: googleId,
-            completed: false,
-            userProfileId: userProfileId
-        })
-            .then(() => {
-                console.log("ok")
-            })
-    }
-
+  console.log(check);
+  if (!check.length) {
+    $.post("/api/bookList", {
+      // eslint-disable-next-line camelcase
+      google_book_id: googleId,
+      completed: false,
+      userProfileId: userProfileId
+    }).then(() => {
+      console.log("ok");
+    });
+  }
 }
 
-$("#book-results").on("click", ".put-in-shelf", function (event) {
+$("#book-results").on("click", ".put-in-shelf", function(event) {
+  event.preventDefault();
 
-    event.preventDefault();
+  const googleId = $(this).attr("data-googleId");
 
-    const googleId = $(this).attr("data-googleId");
+  putInShelf(googleId);
 
-    putInShelf(googleId);
+  addedAlert();
 
-    addedAlert();
-
-    console.log("click")
-
+  console.log("click");
 });
 
 // click event for refresh button on profile page
-$("#dust-off-shelf").on("click", function (event) {
-    event.preventDefault();
-    console.log("Dusting Bookshelf...");
-    location.reload();
+$("#dust-off-shelf").on("click", event => {
+  event.preventDefault();
+  console.log("Dusting Bookshelf...");
+  location.reload();
 });
