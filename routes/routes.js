@@ -23,17 +23,6 @@ module.exports = function(app) {
     res.render("userProfile");
   });
 
-  app.get("/api/book/:bookId", (req, res) => {
-    const selected = req.params.bookId;
-
-    for (let i = 0; i < bookId.length; i++) {
-      if (selected === bookId[i].routeName) {
-        return res.json(bookId[i]);
-      }
-    }
-    res.render("bookPage");
-  });
-
   app.get("/book", (req, res) => {
     res.render("bookPage");
   });
